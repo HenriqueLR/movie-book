@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load formtags %}
+
+{% block navbar %}
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'movies:home' %}">Filmes</a></li> 
+        <li class="active"><a href="{% url 'movies:create_movie' %}">Novo</a></li>
+      </ul>
+      <!--
+      <form class="navbar-form navbar-right">
+        <input type="text" class="form-control" placeholder="Search...">
+      </form>
+      -->
+    </div>
+{% endblock %}
+
+  {% block content %}
+
+<div class="row">
+    <div class="col-sm-12 main">
+
+        <h1 class="page-header">Novo</h1>
+        <div class="row placeholders">
+
+        <div class="col-xs-6 col-sm-12">
+
+
+
+          <form role="form" class="form-horizontal" method="post" enctype="multipart/form-data"><!--form-->
+            {% csrf_token %}
+        <div class='row'>
+
+          <div class='col-md-4'>
+            <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="id_name">Nome:</label>
+              <div class="col-sm-8">
+                {{ form.name|placeholder:"Nome Filme" |addcss:"form-control" }}
+                <span class="help-block">{{ form.name.errors|join:"<br \>" }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class='col-md-4'>
+            <div class="form-group {% if form.director.errors %}has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="id_director">Diretor:</label>
+              <div class="col-sm-8">
+                
+                {{ form.director|addcss:"form-control" }}
+                <span class="help-block">{{ form.director.errors|join:"<br \>" }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class='col-md-4'>
+          <div class="form-group {% if form.img.errors %}has-error{% endif %}">  
+          <label class="col-sm-3 control-label" for="id_img">Imagem:</label>
+          <div class="col-sm-8">
+          <div class="input-group input-file">
+            <div class="form-control" style='color:#9C9C9C;'>
+              selecione uma imagem
+            </div>
+            <span class="input-group-addon">
+              <a class='btn btn-primary' href='javascript:;'>
+                procurar
+                <input type="file" od='id_img' name="img" onchange="$(this).parent().parent().parent().find('.form-control').html($(this).val());">
+              </a>
+            </span>
+          </div>
+          <span class="help-block">{{ form.img.errors|join:"<br \>" }}</span>
+          </div>
+
+          </div>
+          </div>
+
+        </div>
+
+        <div class='row'>
+
+          <div class='col-md-4'>
+            <div class="form-group {% if form.note.errors %}has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="id_note">Nota:</label>
+              <div class="col-sm-8">
+                {{ form.note|addcss:"form-control" }}
+                <span class="help-block">{{ form.note.errors|join:"<br \>" }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class='col-md-4'>
+            <div class="form-group {% if form.description.errors %}has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="id_description">Descricao:</label>
+              <div class="col-sm-8">
+                {{ form.description|textar:"2" |addcss:"form-control" }}
+                <span class="help-block">{{ form.description.errors|join:"<br \>" }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class='col-md-4'>
+            <div class="form-group {% if form.status.errors %}has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="id_status">Status:</label>
+              <div class="col-sm-1">
+                {{ form.status }}
+                <span class="help-block">{{ form.status.errors|join:"<br \>" }}</span>
+              </div>
+            </div>
+          </div>          
+
+
+        </div><!--row-->
+
+          <div class='col-md-3 col-md-offset-4' style='margin-top:1%;'>
+          <input type="submit" class="btn btn-primary btn-metro" value="Salvar" />
+          <a href="{% url 'movies:home' %}" class="btn btn-danger btn-metro" value="voltar" />Voltar</a>
+
+          </div>
+
+          </form><!--form-->
+        </div>
+
+          </div>
+
+        </div>
+    </div>
+
+<div class="row">
+    <div class="col-sm-12 main" style='margin-top:-3%;'>
+        <h1 class="page-header">Filmes</h1>
+              {% if messages %}
+        <div class="row">
+          <div class="col-md-6">
+            {% for message in messages %}
+              <div {% if message.tags == 'error' %} class="alert alert-danger alert-dismissible"{% else %}class="alert alert-info alert-dismissible"{% endif %} role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{ message.tags }}:</strong> {{ message }}.
+              </div>
+            {% endfor %}
+          </div><!--col-md-6-->
+        </div><!--row-->
+      {% endif %}
+
+<div class="col-xs-6 col-sm-12">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Diretor</th>
+          <th>Nota</th>
+          <th>Descrição</th>
+          <th>Status</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for movies in object_list %}
+          <tr>
+          <td>{{ movies.name }}</td>
+          <td>{{ movies.director }}</td>
+          <td>{{ movies.note }}</td>
+          <td>{{ movies.description }}</td>
+          <td>{% if movies.status %}<span style='color:green;' class="glyphicon glyphicon-ok-sign"></span>{% else %}<span style='color:red;' class="glyphicon glyphicon-minus-sign"></span>{% endif %}</td>  
+          <td><a href='{% url 'movies:edit_movie' movies.pk %}'><span class="glyphicon glyphicon-pencil"></span></a></td>
+          <td><a href='{% url 'movies:delete_movie' movies.pk %}'><span class="glyphicon glyphicon-remove"></span></a></td>
+         
+          <tr>              
+        {% endfor %}                
+      </tbody>
+    </table>
+
+
+
+
+          </div>
+</div>
+       
+
+
+
+    </div>
+
+
+ <!--MODAL INIT-->
+  <div id='modal_editar' class="modal fade bs-example-modal-static" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button onclick="set_none('edit')" aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+          <h4 class="modal-title">Editar {{ object_name }}?</h4>
+        </div>
+
+        <div class="modal-body">
+
+          <div id='edit' style="display: none;">
+            
+          </div>
+
+          <div class='col-md-offset-4'>
+            <div id='loading' style="display: none;">
+              <img src="{% static "img/carregar.gif" %}" alt="" />
+            </div>
+          </div>
+
+        </div><!--modal-body-->
+      </div><!--modal-content-->
+    </div><!--modal-dialog-->
+  </div><!--modal-->
+  <!--MODAL END-->
+
+ <!--MODAL INIT-->
+  <div id='modal_delete' class="modal fade bs-example-modal-static" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button onclick="set_none('delete')" aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+          <h4 class="modal-title">Apagar {{ object_name }}?</h4>
+        </div>
+
+        <div class="modal-body">
+
+          <div id='delete' style="display: none;">
+            
+          </div>
+
+          <div class='col-md-offset-4'>
+            <div id='loading' style="display: none;">
+              <img src="{% static "img/carregar.gif" %}" alt="" />
+            </div>
+          </div>
+
+        </div><!--modal-body-->
+      </div><!--modal-content-->
+    </div><!--modal-dialog-->
+  </div><!--modal-->
+  <!--MODAL END-->
+
+
+
+
+</div>
+
+
+
+
+  {% endblock %}
+
+
+{% block extra_scripts %}
+  <script>
+ 
+function send_request(url,id){
+  var url = url;
+  console.log(url);
+  $("#loading").css({display: "block"});
+
+  setTimeout(function(){
+    $.ajax({
+      type: 'get',
+      url: url,
+      success: function (data) {
+        $("#"+id).html(data);
+      },
+
+      error: function (data) {
+        $("#"+id).html("Error");
+      },
+
+      complete: function(data){
+        $("#loading").css({display: "none"});
+        $("#"+id).css({display: "block"});
+      },
+    });
+  }, 100);
+  return false;
+}
+
+
+function set_none(id){
+  $("#"+id).css({display: "none"});
+}
+
+
+</script>
+{% endblock %}

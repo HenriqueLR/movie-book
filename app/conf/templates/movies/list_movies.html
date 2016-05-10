@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block navbar %}
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="active"><a href="{% url 'movies:home' %}">Filmes</a></li> 
+        <li><a href="{% url 'movies:create_movie' %}">Novo</a></li>
+      </ul>
+      <form class="navbar-form navbar-right">
+        <input name='search' id='search' type="text" class="form-control" placeholder="Pesquisar...">
+      </form>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12 main">
+
+        <h1 class="page-header">Filmes</h1>
+        <div class="row placeholders">
+        {% for movies in object_list %}
+            <div class="col-xs-6 col-sm-3" style='margin-top:2%;'>
+                <img src="{{ movies.img.url }}" width="200" height="200" class="img-rounded" alt="Generic placeholder thumbnail">
+                <h4>{{ movies.name }}</h4>
+                <a  href="{% url 'movies:scheduled_movie' movies.pk %}" class='btn btn-warning'>Agendar</a>
+            </div>
+        {% empty %}
+          <h2>Não há filmes.</h2>            
+        {% endfor %}
+        </div>
+
+    </div><!-- col-md-12 -->
+</div><!-- row -->
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  $(function () {
+      $.urlParam = function(name){
+          var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+          if (results==null){
+             return null;
+          }
+          else{
+             return results[1] || 0;
+          }
+      }
+      if($.urlParam('search')){
+        $('#search').val($.urlParam('search'));
+        console.log($.urlParam('search'));  
+      }      
+  });
+</script>
+{% endblock %}

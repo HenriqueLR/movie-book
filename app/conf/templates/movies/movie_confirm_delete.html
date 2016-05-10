@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block navbar %}
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'movies:home' %}">Filmes</a></li> 
+        <li class="active"><a href="{% url 'movies:create_movie' %}">Novo</a></li>
+      </ul>
+      <!--
+      <form class="navbar-form navbar-right">
+        <input type="text" class="form-control" placeholder="Search...">
+      </form>
+      -->
+    </div>
+{% endblock %}
+
+  {% block content %}
+
+<div class="row">
+    <div class="col-sm-12 main">
+
+        <h1 class="page-header">Apagar?</h1>
+        
+        <div class="row placeholders">
+
+        <div class="col-xs-6 col-sm-12">
+
+  <div class='col-md-4'>
+    
+    <dl> 
+      <dt><img data-src="holder.js/200x200" class="img-thumbnail" alt="200x200" src="{% static 'img/Logo.png' %}"  style="width: 200px; height: 200px;"></dt> 
+      <dt style='margin-top:2%;'>Nome:</dt> 
+        <dd>{{object.name}}</dd> 
+      <dt>Diretor</dt> 
+        <dd>{{object.director}}</dd> 
+      <dt>Nota</dt> 
+        <dd>{{object.note}}</dd>
+      <dt>Status</dt> 
+        <dd>{% if object.status %}<span style='color:green;' class="glyphicon glyphicon-ok-sign"></span>{% else %}<span style='color:red;' class="glyphicon glyphicon-minus-sign"></span>{% endif %}</dd>
+      <dt>Apagar?</dt>
+      <dd>  <form action="{{ object.get_delete_url }}" method="post" class='form-inline'>
+    {% csrf_token %}
+    <div class='row'><!--row-->
+      <div class='col-md-8 col-md-offset-2'><!--col-md-14 col-md-offset-3-->
+
+        <div class="form-group">
+          <input type="submit" class='btn btn-danger btn-metro' value="Sim"/>
+        </div>
+        <div class="form-group">
+          <a href="{% url 'movies:create_movie' %}" class='btn btn-primary'>Não</a>
+        </div>
+
+      </div>
+    </div>
+  </form></dd> 
+
+    </dl>
+  </div>
+  <div class='col-md-8'>
+    <p style='text-align:left;'>{{ object.description }}</p>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block pagination %}
+{% endblock %}

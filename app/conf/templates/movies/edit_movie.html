@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load formtags %}
+
+
+{% block navbar %}
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'movies:home' %}">Filmes</a></li> 
+        <li class="active"><a href="{% url 'movies:create_movie' %}">Novo</a></li>
+      </ul>
+      <!--
+      <form class="navbar-form navbar-right">
+        <input type="text" class="form-control" placeholder="Search...">
+      </form>
+      -->
+    </div>
+{% endblock %}
+
+  {% block content %}
+<div class="row">
+    <div class="col-sm-12 main">
+
+        <h1 class="page-header">Editar?</h1>
+              {% if messages %}
+        <div class="row">
+          <div class="col-md-6">
+            {% for message in messages %}
+              <div {% if message.tags == 'error' %} class="alert alert-danger alert-dismissible"{% else %}class="alert alert-info alert-dismissible"{% endif %} role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{ message.tags }}:</strong> {{ message }}.
+              </div>
+            {% endfor %}
+          </div><!--col-md-6-->
+        </div><!--row-->
+      {% endif %}        
+        <div class="row placeholders">
+
+        <div class="col-xs-6 col-sm-12">
+
+
+
+          <form role="form" class="form-horizontal" method="post" enctype="multipart/form-data"><!--form-->
+            {% csrf_token %}
+        <div class='row'>
+
+          <div class='col-md-4'>
+            <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="id_name">Nome:</label>
+              <div class="col-sm-8">
+                {{ form.name|placeholder:"Nome Filme" |addcss:"form-control" }}
+                <span class="help-block">{{ form.name.errors|join:"<br \>" }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class='col-md-4'>
+            <div class="form-group {% if form.director.errors %}has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="id_director">Diretor:</label>
+              <div class="col-sm-8">
+                
+                {{ form.director|addcss:"form-control" }}
+                <span class="help-block">{{ form.director.errors|join:"<br \>" }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class='col-md-4'>
+          <div class="form-group {% if form.img.errors %}has-error{% endif %}">  
+          <label class="col-sm-3 control-label" for="id_img">Imagem:</label>
+          <div class="col-sm-8">
+          <div class="input-group input-file">
+            <div class="form-control" style='color:#9C9C9C;'>
+              selecione uma imagem
+            </div>
+            <span class="input-group-addon">
+              <a class='btn btn-primary' href='javascript:;'>
+                procurar
+                <input type="file" od='id_img' name="img" onchange="$(this).parent().parent().parent().find('.form-control').html($(this).val());">
+              </a>
+            </span>
+          </div>
+          <span class="help-block">{{ form.img.errors|join:"<br \>" }}</span>
+          </div>
+
+          </div>
+          </div>
+
+        </div>
+
+        <div class='row'>
+
+          <div class='col-md-4'>
+            <div class="form-group {% if form.note.errors %}has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="id_note">Nota:</label>
+              <div class="col-sm-8">
+                {{ form.note|addcss:"form-control" }}
+                <span class="help-block">{{ form.note.errors|join:"<br \>" }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class='col-md-4'>
+            <div class="form-group {% if form.description.errors %}has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="id_description">Descricao:</label>
+              <div class="col-sm-8">
+                {{ form.description|textar:"2" |addcss:"form-control" }}
+                <span class="help-block">{{ form.description.errors|join:"<br \>" }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class='col-md-4'>
+            <div class="form-group {% if form.status.errors %}has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="id_status">Status:</label>
+              <div class="col-sm-1">
+                {{ form.status }}
+                <span class="help-block">{{ form.status.errors|join:"<br \>" }}</span>
+              </div>
+            </div>
+          </div>          
+
+
+        </div><!--row-->
+
+          <div class='col-md-3 col-md-offset-4' style='margin-top:1%;'>
+          <input type="submit" class="btn btn-primary btn-metro" value="Alterar" />
+          <a href="{% url 'movies:create_movie' %}" class="btn btn-danger btn-metro" value="voltar" />Voltar</a>
+
+          </div>
+
+          </form><!--form-->
+        </div>
+
+          </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block pagination %}
+{% endblock %}
