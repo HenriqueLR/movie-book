@@ -31,7 +31,7 @@
               <div class='col-md-2'>
                 
                 <dl> 
-                  <dt><img data-src="holder.js/200x200" class="img-thumbnail" alt="200x200" src="{% static 'img/Logo.png' %}"  style="width: 200px; height: 200px;"></dt> 
+                  <dt><img data-src="holder.js/200x200" class="img-thumbnail" alt="200x200" src="{{ movie.img.url }}"  style="width: 200px; height: 200px;"></dt> 
                   <dt style='margin-top:2%;'>Nome:</dt> 
                     <dd>{{movie.name}}</dd> 
                   <dt>Diretor</dt> 
